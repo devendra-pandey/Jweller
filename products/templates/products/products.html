@@ -1,0 +1,64 @@
+{% extends "home/header.html" %}
+{% load static %}
+
+{%block title %} Products {% endblock title %}
+
+{% block content %}
+
+<section id="main-content">
+    <section class="wrapper">
+        <h3><i class="fa fa-angle-right"></i> To-Do Lists</h3>
+
+        <div class="row mt">
+            <div class="col-md-12">
+                <section class="task-panel tasks-widget">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h5><i class="fa fa-tasks"></i> All Products</h5>
+                        </div>
+                        <br>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Gold Weight</th>
+                                <th scope="col">Diamond Carat</th>
+                                <th scope="col">Design Number</th>
+                                <th scope="col">Edit or Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prods in prod %}
+                            <tr>
+                                <th scope="row">{{ prods.id  }}</th>
+                                <td><img src="{{ prods.image.url }}"></td>
+                                <td>{{ prods.gold_weight }}</td>
+                                <td> {{ prods.diamond_carat }}</td>
+                                <td> {{ prods.design_number }} </td>
+                                <td>
+                                    <a href="/update_prod/{{ prods.id }}"><button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button></a>
+                                    <a href="/delete_prod/{{ prods.id}}"><button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+
+                <div class=" add-task-row">
+                    <a class="btn btn-success btn-sm pull-left" href="/add_products/">Add New Product</a>
+                </div>
+                </section>
+            </div>
+        </div>
+    </section>
+</section>
+</div>
+
+
+
+{% include 'home/footer.html' %}
+
+{% endblock %}
