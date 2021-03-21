@@ -46,25 +46,11 @@
                                 <th scope="col">Gold Weight</th>
                                 <th scope="col">Diamond Carat</th>
                                 <th scope="col">Design Number</th>
-                                <th scope="col">Add To catalogue</th>
+                                <th scope="col">Add To Quatation</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% if no_results %}
-
-                            {% for products in prod %}
-                            <tr class="unread">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><img src="{{ products.image.url }}"></td>
-                                <td class="view-message  dont-show"><a href="">{{ products.gold_weight }}</a></td>
-                                <td class="view-message "><a href="">{{ products.diamond_carat }}</a></td>
-                                <td class="view-message  inbox-small-cells"> {{ products.design_number }} </td>
-                                <td class="view-message  "><button type="submit">Add To Quatation </button></i></td>
-                            </tr>
-                            {% endfor %}
-                            {% else %}
+                            {% if results %}
                             {% for result in results %}
                             <tr class="unread">
                                 <td class="inbox-small-cells">
@@ -76,17 +62,36 @@
                                 <td class="view-message"><a href="mail_view.html">{{ result.diamond_carat }}</a></td>
                                 <td class="view-message inbox-small-cells">{{ result.design_number }}</td>
                                 <td class="view-message ">
-                                    <form action="{% url "quatation:quatation_add" result.id %}" method="post">
-                                        {{ quatation_add_form }}
+                                    <form action="/add_quatation/" method="POST">
                                         {% csrf_token %}
+                                        <input type="hidden" name="p_id" value="{{ result.id }}">
                                         <button class=" text-center btn btn-info btn-lg" type="submit">Add To Quatation </button>
                                     </form>
                                     </td>
                             </tr>
-                            {{ result.last_name }}
                             {% endfor %}
+                            {% else %}
+                            {% for products in prod %}
+                            <tr class="unread">
+                                <td class="inbox-small-cells">
+                                    <input type="checkbox" class="mail-checkbox">
+                                </td>
+                                <td class="inbox-small-cells"><img src="{{ products.image.url }}"></td>
+                                <td class="view-message  dont-show"><a href="">{{ products.gold_weight }}</a></td>
+                                <td class="view-message "><a href="">{{ products.diamond_carat }}</a></td>
+                                <td class="view-message  inbox-small-cells"> {{ products.design_number }} </td>
+                                <td class="view-message ">
+                                    <form action="/add_quatation/" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="p_id" value="{{ products.id }}">
+                                        <button class=" text-center btn btn-info btn-lg" type="submit">Add To Quatation </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
                             {% endif %}
-
+                            
 
                         </tbody>
                     </table>
@@ -109,22 +114,31 @@
                                 <th scope="col">Diamond Carat</th>
                                 <th scope="col">Design Number</th>
                                 <th scope="col">Price</th>
+                                <th scope="col">Remove</th>
                             </tr>
                         </thead>
                         <tbody>
-
-                            {% for item in quatation %}
-                                        {% with product=item.product %}
-                                    <tr>
-                                        <td class="product_remove"><a href="{% url 'quatation:quatation_remove' product.id %}" class="remove_from_cart">
-                                            <span class="fa fa-trash-o"></span></a>
-                                        </td>
-                                        <td class="product_thumb"><img src=" {{ product.image.url }}" height="70px" width="70px"></td>
-                                        <td><input type="number"></td>
-                                    </tr>
-                                        {% endwith %}
+                            {% for list in List1 %}    
+                                        <!-- {{ list.ab }}     -->
+                                        {% for products in list.quat %}
+                                        <tr class="unread">
+                                            <td class="inbox-small-cells">
+                                                <input type="checkbox" class="mail-checkbox">
+                                            </td>
+                                            <td class="inbox-small-cells"><img src="{{ products.image.url }}"></td>
+                                            <td class="view-message  dont-show"><a href="">{{ products.gold_weight }}</a></td>
+                                            <td class="view-message "><a href="">{{ products.diamond_carat }}</a></td>
+                                            <td class="view-message  inbox-small-cells"> {{ products.design_number }} </td>
+                                            <td class="view-message  "><input type="number"></i></td>
+                                            <td class="view-message ">
+                                                <form action="/add_quatation/" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="p11_id" value="{{ products.id }}">
+                                                <button class=" text-center btn btn-danger btn-lg" type="submit">Remove </button>
+                                            </form></td>
+                                        </tr>
+                                        {% endfor %}
                                     {% endfor %}
-
                         </tbody>
 
                     </table>
@@ -143,7 +157,7 @@
                     <br>
 
                     <div class="text-center" >
-                        <button class="btn btn-info btn-lg" type="submit">Create Quatation</button>
+                        <button class="btn btn-success btn-lg" type="submit">Create Quatation</button>
                     </div>
 
                 </div>

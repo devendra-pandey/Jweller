@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm, Textarea
 from django.forms.widgets import RadioSelect
-from products.models import Products
+from products.models import Product
 from django.forms import ClearableFileInput, ModelForm
 
 
@@ -11,7 +11,7 @@ class DateInput(forms.DateInput):
 
 class ProductsForm(forms.ModelForm):
     class Meta:
-           model = Products
+           model = Product
            fields = [
                'image',
                'gold_weight',

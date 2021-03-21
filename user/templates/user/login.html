@@ -1,0 +1,34 @@
+{% extends "home/header.html" %}
+{% load static %}
+
+{%block title %} Add to Catalogue {% endblock title %}
+
+{% block content %}
+
+<section id="main-content">
+    <section class="wrapper">
+
+        {% load crispy_forms_tags %}
+
+        <!--Login--> 
+        <div class="container py-5">
+          <h1>Login</h1>
+          <form method="POST">
+            {% csrf_token %}
+            {{ login_form|crispy }}
+            <button class="btn btn-primary" type="submit">Login</button>
+          </form>
+          <p class="text-center">Don't have an account? <a href="/register">Create an account</a>.</p>
+        </div>
+        
+
+    </section>
+</section>
+
+
+
+
+
+{% include 'home/footer.html' %}
+
+{% endblock %}

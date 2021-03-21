@@ -1,17 +1,24 @@
 from django.shortcuts import render,redirect, get_object_or_404,HttpResponse
 
-from . models import Products
+from . models import Product
 from . forms import ProductsForm
 
 def products(request):
+    p1_id = request.POST.get('p_id')
+    print("**$$4*****")
+    print(p1_id)
+    quatation = ['1','2','3']
 
-    prod = Products.objects.filter(status=1).all()
-
+    if p1_id not in quatation:
+        quatation.append(p1_id)
+    else:
+        print("error")
+    print('Updated  list: ', quatation)
+    prod = Product.objects.filter(status=1).all()
     context = {
         'prod':prod,
     }
 
-    
     return render(request, 'products/products.html',context)
 
 
@@ -32,7 +39,7 @@ def products_create(request):
 def update_products(request, id):
     prod_id = int(id)
     try:
-        prod_get = Products.objects.get(id = prod_id)
+        prod_get = Product.objects.get(id = prod_id)
     except Products.DoesNotExist:
         return redirect('products')
     form = ProductsForm(request.POST or None, instance = prod_get)
@@ -46,8 +53,8 @@ def update_products(request, id):
 def delete_products(request, id):
     prod_id = int(id)
     try:
-        prod_data = Products.objects.get(id = prod_id)
-    except Products.DoesNotExist:
+        prod_data = Product.objects.get(id = prod_id)
+    except Product.DoesNotExist:
         return redirect('products')
     prod_data.status = '0'
     prod_data.save()
@@ -55,27 +62,61 @@ def delete_products(request, id):
 
 
 def search_jwel(request):
-
-    context_dict = {}
     if request.method == 'POST':
         query = request.POST['design_number']
-        results = Products.objects.filter(design_number=query)
+        results = Product.objects.filter(design_number=query)
         if query:
-            context_dict['results'] = results
+            context = {
+                'results':results,
+            }
         else:
-            context_dict['no_results'] = query
+            prod = Product.objects.filter(status=1).all()
+            context = {
+                'prod':prod,
+                'query':query,
+            }
             
-    return render(request, "products/add_quatation.html", context_dict)
+    return render(request, "products/add_quatation.html", context)
+
 
 
 def add_quatation(request):
-    prod = Products.objects.filter(status=1).all()
+    p1_id = request.POST.get('p_id')
+    p11_id = request.POST.get('p11_id')
+    print("**$$4*****")
+    print(p11_id)
+    if request.session.get("quatation", None) is None:
+        quatation = []
+        request.session["quatation"] = quatation
+    else:
+        quatation = request.session["quatation"]
+        if p1_id not in quatation or p11_id in quatation:
+            quatation.append(p1_id)
+            quatation.remove(p11_id)
+            request.session["quatation"] = quatation
+            print('Updated  list: ', quatation)
+        else:
+            print("Item already available")
+    
+    print("helo")
+    print(quatation)
+    print("heloo")
+    List1 = []
+    res = [i for i in quatation if i]
+
+    print(res)
+    prod = Product.objects.filter(status=1).all()
+
+    for ab in res:
+        ab_ = {'quat': Product.objects.filter(id=ab), 'ab': ab}
+        List1.append(ab_)    
+
     context = {
         'prod':prod,
-        
+        'List1':List1,
     }
     return render(request, 'products/add_quatation.html', context)
-
+    
 
 def quatation(request):
     return render(request, 'products/view_quatation.html')

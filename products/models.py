@@ -7,7 +7,7 @@ TYPE_MARRIED = (
     )
 
 
-class Products(models.Model):
+class Product(models.Model):
     image = models.FileField(upload_to='static/Uploads/product/', null= True , blank=True)
     gold_weight = models.CharField(max_length=30)
     diamond_carat = models.CharField(max_length=30)
@@ -20,7 +20,7 @@ class Products(models.Model):
         return self.design_number
 
     def calculate_design_number(self):
-        res = Products.objects.filter().aggregate(max_id=Max('pk'))
+        res = Product.objects.filter().aggregate(max_id=Max('pk'))
         abc  = res.get('max_id')
         if abc is None :
             abc = 0
@@ -40,3 +40,11 @@ class Products(models.Model):
     
     class Meta:
       get_latest_by = 'created'
+
+
+# class Quatation(models.Model):
+#     prod_id = models.ManyToManyField(Product)
+#     price = models.CharField(max_length=30,default=0, unique=True)
+    
+#     def __str__(self):
+#         return self.prod_id
